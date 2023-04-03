@@ -1,0 +1,7 @@
+openai-whisper==20230314
+setuptools-rust==1.5.2
+load_dotenv==0.1.0
+flask==2.2.3
+langchain==0.0.129
+openai==0.27.2
+pyttsx3==2.90
