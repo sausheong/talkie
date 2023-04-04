@@ -3,6 +3,9 @@ from langchain.memory import ConversationBufferWindowMemory, ConversationBufferM
 from langchain.agents import initialize_agent, Tool
 from langchain.chat_models import ChatOpenAI
 from langchain.utilities import GoogleSerperAPIWrapper
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
 
 # get a chat LLM chain, following a prompt template
 def get_chat_chain():
@@ -34,3 +37,11 @@ def get_search_agent():
         verbose=True,
         memory=ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     )    
+
+def get_qa_chain():
+    vectordb = Chroma(persist_directory='.', embedding_function=OpenAIEmbeddings())
+    retriever = vectordb.as_retriever()
+    return RetrievalQA.from_chain_type(
+        llm=ChatOpenAI(temperature=0), 
+        chain_type="stuff", 
+        retriever=retriever)    

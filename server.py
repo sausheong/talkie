@@ -1,9 +1,8 @@
 import os
 import whisper
 from flask import Flask, render_template, request
-from chains import get_chat_chain, get_search_agent
+from chains import get_chat_chain, get_search_agent, get_qa_chain
 import pyttsx3
-
 
 # get path for static files
 static_dir = os.path.join(os.path.dirname(__file__), 'static')  
@@ -18,10 +17,10 @@ model = whisper.load_model('small.en')
 
 chat_chain = get_chat_chain()
 search_agent = get_search_agent()
+qa_chain = get_qa_chain()
 
 # start server
 server = Flask(__name__, static_folder=static_dir, template_folder=static_dir)
-
 
 @server.route('/')
 def landing():
@@ -44,7 +43,8 @@ def record():
 
     # predict the response to get the output
     # output = chat_chain.predict(human_input=text)
-    output = search_agent.run(input=text)
+    # output = search_agent.run(input=text)
+    output = qa_chain.run(text)
     
     # say out the response
     engine = pyttsx3.init()
